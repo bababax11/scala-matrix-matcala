@@ -2,18 +2,23 @@ package bababax11.matcala.matrix
 
 import scala.collection.mutable.ArrayBuffer
 
-class Mtrx2[T](val rows: Int, val cols: Int, val data: Vector[Vector[T]]) {
+class Mtrx2[T](val rows: Int, val cols: Int, val data: Array[T]) {
 
-  def this(data: Vector[Vector[T]]) = {
-    this(data.length, if(data.length==0) 0 else data(0).length, data)
+  if(data.length != rows * cols)
+    throw new IndexOutOfBoundsException("サイズがあっていない")
+
+  def this(rows: Int, data: Array[T]) = {
+    this(rows, data.length / rows, data)
+    if(data.length % rows != 0)
+      throw new IndexOutOfBoundsException("不正なArrayとrowsの組み合わせ")
   }
 
   def apply(i: Int, j: Int): T = {
-    data(i)(j)
+    data(i * cols + j)
   }
 
   override def equals(obj: Any): Boolean = obj match {
-    case ob : Mtrx2[_] => this.data == ob.data
+    case ob : Mtrx2[_] => this.data sameElements ob.data
     case _ => false
   }
 
@@ -30,7 +35,7 @@ class Mtrx2[T](val rows: Int, val cols: Int, val data: Vector[Vector[T]]) {
   }
 }
 
-class ValueMtrx2[T](override val rows: Int, override val cols: Int, override val data: Vector[Vector[T]])
+class ValueMtrx2[T](override val rows: Int, override val cols: Int, override val data: Array[T])
   extends Mtrx2[T](rows, cols, data) {
 
   def calcEach(mat: ValueMtrx2[T], f: (T,T) -> S): ValueMtrx2[S] = {
