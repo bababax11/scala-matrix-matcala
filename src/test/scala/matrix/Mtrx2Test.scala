@@ -11,8 +11,8 @@ class Mtrx2Test extends FlatSpec with DiagrammedAssertions{
           4,5,6))
 
   "rows, cols" should "be the number of rows, cols" in {
-    assert(mat.rows == 2)
-    assert(mat.cols == 3)
+    assert(mat.rows == 3)
+    assert(mat.cols == 2)
   }
 
   "same matrix" should "be recognized as same" in {
