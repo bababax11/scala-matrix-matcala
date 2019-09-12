@@ -1,2 +1,6 @@
 [0m[[0m[0mdebug[0m] [0m[0mAcquiring lock on file /home/meip-users/IdeaProjects/Matcala/project/target/.sbt-compilation-infos/matcala-compile/.sbt-idea-lock ...[0m
+[0m[[0m[31merror[0m] [0m[0m/home/meip-users/IdeaProjects/Matcala/src/main/scala/matrix/Mtrx2.scala:43:29: No ClassTag available for S[0m
+[0m[[0m[31merror[0m] [0m[0m    val arr = Array.ofDim[S](rows * cols)[0m
+[0m[[0m[31merror[0m] [0m[0m                            ^[0m
+[0m[[0m[31merror[0m] [0m[0mone error found[0m
 [0m[[0m[0mdebug[0m] [0m[0mReleasing lock on file /home/meip-users/IdeaProjects/Matcala/project/target/.sbt-compilation-infos/matcala-compile/.sbt-idea-lock.[0m

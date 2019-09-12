@@ -2,9 +2,9 @@ package bababax11.matcala.matrix
 
 import scala.collection.mutable.ArrayBuffer
 
-class Mtrx2[T](val rows: Int, val cols: Int, val data: Array[T]) {
+class Mtrx2[+T](val rows: Int, val cols: Int, val data: Array[T]) {
 
-  if(data.length != rows * cols)
+  if (data.length != rows * cols)
     throw new IndexOutOfBoundsException("サイズがあっていない")
 
   def this(rows: Int, data: Array[T]) = {
@@ -18,39 +18,33 @@ class Mtrx2[T](val rows: Int, val cols: Int, val data: Array[T]) {
   }
 
   override def equals(obj: Any): Boolean = obj match {
-    case ob : Mtrx2[_] => this.data sameElements ob.data
+    case ob : Mtrx2[_] =>
+      rows == ob.rows && cols == ob.cols && (this.data sameElements ob.data)
     case _ => false
   }
 
   override def toString: String = {
     var s = "[\n"
-    for(vec <- data) {
-      s +=" [ "
-      for(num <- vec) {
-        s += num.toString + " "
-      }
-      s += "]\n"
+    for (k <- 0 to rows*cols; v <- data) {
+      if (k % cols == 0) s += " ["
+      s += v.toString + " "
+      if (k % cols == cols-1) s += "]\n"
     }
     s + "]"
   }
 }
 
-class ValueMtrx2[T](override val rows: Int, override val cols: Int, override val data: Array[T])
+class ValueMtrx2[+T <: AnyVal](override val rows: Int, override val cols: Int, override val data: Array[T])
   extends Mtrx2[T](rows, cols, data) {
 
-  def calcEach(mat: ValueMtrx2[T], f: (T,T) -> S): ValueMtrx2[S] = {
-    if(rows != mat.rows || cols != mat.cols) {
-      throw new IndexOutOfBoundsException("Shape is not same")
+  def calcEach[S <: AnyVal, U >: T](otherMat: ValueMtrx2[U], f: (U, U) => S): ValueMtrx2[S] = {
+    if (rows != otherMat.rows || cols != otherMat.cols) {
+      throw new IndexOutOfBoundsException(s"Shape is not same: ${(rows, cols)} and ${(otherMat.rows, otherMat.cols)}")
     }
-    val arr = Array.ofDim(rows)
-    for(i <- 0 to rows; vec <- data; otherVec <-mat.data) {
-      val ar = Array.ofDim(cols)
-      for(j <- 0 to cols; v <- vec; ov <- otherVec) {
-          ar(j) = f(v, ov)
-      }
-      arr(i) = ar.toVector
+    val arr = Array.ofDim[S](rows * cols)
+    for (k <- 0 to rows*cols) {
+      arr(k) = f(data(k), otherMat.data(k))
     }
-    val vec = arr.toVector
-    new ValueMtrx2[Any](rows, cols, vec)
+    new ValueMtrx2[S](rows, cols, arr)
   }
 }
