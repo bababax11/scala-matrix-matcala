@@ -1,0 +1,1 @@
+["sbt.Task[scala.collection.immutable.Map[java.lang.String, scala.collection.Seq[scala.Tuple2[java.nio.file.Path, sbt.nio.FileStamp]]]]",{"2.13.0":{"hashes":[["/home/meip-users/IdeaProjects/Matcala/src/main/scala/matrix/Mtrx2.scala","8950616cd2be4a8e5c4d9edd966ff63010954113"]],"lastModifiedTimes":[]}}]
