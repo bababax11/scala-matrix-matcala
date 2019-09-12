@@ -35,12 +35,8 @@ class Mtrx2[T](val rows: Int, val cols: Int, val data: Array[T]) {
     }
     s + "]"
   }
-}
 
-class ValueMtrx2[T <: AnyVal](override val rows: Int, override val cols: Int, override val data: Array[T])
-  extends Mtrx2[T](rows, cols, data) {
-
-  def calcEach[S <: AnyVal: ClassTag, U >: T <: AnyVal](otherMat: ValueMtrx2[U], f: (U, U) => S): ValueMtrx2[S] = {
+  def calcEach[S : ClassTag, U >: T](otherMat: Mtrx2[U], f: (U, U) => S): Mtrx2[S] = {
     if (rows != otherMat.rows || cols != otherMat.cols) {
       throw new IndexOutOfBoundsException(s"Shape is not same: ${(rows, cols)} and ${(otherMat.rows, otherMat.cols)}")
     }
@@ -48,8 +44,14 @@ class ValueMtrx2[T <: AnyVal](override val rows: Int, override val cols: Int, ov
     for (k <- 0 until rows*cols) {
       arr(k) = f(data(k), otherMat.data(k))
     }
-    new ValueMtrx2[S](rows, cols, arr)
+    new Mtrx2[S](rows, cols, arr)
   }
+}
+
+class ValueMtrx2[T <: AnyVal](override val rows: Int, override val cols: Int, override val data: Array[T])
+  extends Mtrx2[T](rows, cols, data) {
+
+
 
 //  def +[U >: T <: AnyVal](otherMat: ValueMtrx2[U]) = {
 //    calcEach(otherMat, (x, y): (T, T) => x + y )

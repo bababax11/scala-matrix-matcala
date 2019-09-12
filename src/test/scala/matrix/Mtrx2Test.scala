@@ -10,6 +10,9 @@ class Mtrx2Test extends FlatSpec with DiagrammedAssertions{
     Array(1,2,3,
           4,5,6))
 
+  val matDiff = new Mtrx2(1,
+    Array(1,2,3,4,5,6))
+
   "rows, cols" should "be the number of rows, cols" in {
     assert(mat.rows == 2)
     assert(mat.cols == 3)
@@ -17,6 +20,7 @@ class Mtrx2Test extends FlatSpec with DiagrammedAssertions{
 
   "same matrix" should "be recognized as same" in {
     assert(mat == matSame)
+    assert(mat != matDiff)
   }
   "invalid matrix" should "throw Exception" in {
     intercept[IndexOutOfBoundsException](
@@ -34,8 +38,13 @@ class Mtrx2Test extends FlatSpec with DiagrammedAssertions{
       mat(0, 3)
     )
     intercept[IndexOutOfBoundsException](
-      mat(3, 0)
+      mat(2, 0)
     )
+  }
+
+  "calcEach" should "mapping" in {
+    assert(mat.calcEach(matSame, (x: Int, y: Int)=> x + y) ==
+            new Mtrx2(2, Array(2,4,6,8,10,12)))
   }
 
 //  val vmat = new ValueMtrx2[Int](2,
