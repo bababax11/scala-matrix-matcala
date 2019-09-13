@@ -42,14 +42,30 @@ class Mtrx2Test extends FlatSpec with DiagrammedAssertions{
     )
   }
 
-  "calcEach" should "mapping" in {
-    assert(mat.calcEach(matSame, (x: Int, y: Int)=> x + y) ==
-            new Mtrx2(2, Array(2,4,6,8,10,12)))
+  val mat2 = new Mtrx2(2, Array(-1,-2,-3,-4,-5,0))
+
+  "calcEach" should "be mapping" in {
+    assert(mat.calcEach(mat2)(_ + _) ==
+            new Mtrx2(2, Array(0,0,0,0,0,6)))
   }
 
-//  val vmat = new ValueMtrx2[Int](2,
-//    Array(1,2,3,
-//          4,5,6))
+  val vMat = new ValueMtrx2[Int](2,
+    Array[Int](1,2,3,
+          4,5,6))
+
+  val vMat2 = new ValueMtrx2[Int](2, Array(1,2,3,4,4,0))
+
+  "calculation" should "be done properly" in {
+
+    assert(vMat +[Int] vMat2 == new ValueMtrx2[Int](2, Array(2,4,6,8,9,6)))
+    assert(vMat -[Int] vMat2 == new ValueMtrx2[Int](2, Array(0,0,0,0,1,6)))
+    assert(vMat *[Int] vMat2 == new ValueMtrx2[Int](2, Array(1,4,9,16,20,0)))
+    assert(vMat +[Int] 1 == new ValueMtrx2[Int](2, Array(2,3,4,5,6,7)))
+    assert(vMat -[Int] 1 == new ValueMtrx2[Int](2, Array(0,1,2,3,4,5)))
+    assert(vMat *[Int] 2 == new ValueMtrx2[Int](2, Array(2,4,6,8,10,12)))
+  }
+
+
 
 
 
