@@ -38,6 +38,9 @@ class Mtrx2Test extends FlatSpec with DiagrammedAssertions{
       mat(0, 3)
     )
     intercept[IndexOutOfBoundsException](
+      mat(0, -1)
+    )
+    intercept[IndexOutOfBoundsException](
       mat(2, 0)
     )
   }
