@@ -84,8 +84,8 @@ class ValueMtrx2[T: ClassTag](override val rows: Int, override val cols: Int, ov
     new ValueMtrx2[S](rows, cols, arr)
   }
 
-  def +(otherMat: ValueMtrx2[T]): ValueMtrx2[T] =
-    calcEachNumeric(otherMat)( (x: T, y: T) => num.plus(x, y) )
+  def +[U >: T: ClassTag](otherMat: ValueMtrx2[U])(implicit num: Numeric[U]): ValueMtrx2[U] =
+    calcEachNumeric(otherMat)( (x: U, y: U) => num.plus(x, y) )
 
   def -[U >: T: ClassTag](otherMat: ValueMtrx2[U])(implicit num: Numeric[U]): ValueMtrx2[U] =
     calcEachNumeric(otherMat)( (x: U, y: U) => num.minus(x, y) )
