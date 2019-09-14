@@ -81,7 +81,7 @@ class Mtrx2[T](val rows: Int, val cols: Int, val data: Array[T]) {
 
 
   def map[S: ClassTag, U >: T](f: U => S): Mtrx2[S] = {
-    val N = rows * cols / 4 // スレッド1つあたりの要素数。動かしてみて決める必要あり
+    val N = rows * cols / 6 // スレッド1つあたりの要素数。動かしてみて決める必要あり
     val r = rows * cols % N
     val nDiv = if (r!=0) rows * cols / N + 1 else rows * cols / N
     val arrFuture = Array.ofDim[Future[Array[S]]](nDiv)
@@ -116,7 +116,7 @@ class ValueMtrx2[T: ClassTag](override val rows: Int, override val cols: Int, ov
     if (rows != otherMat.rows || cols != otherMat.cols) {
       throw new IndexOutOfBoundsException(s"Shape is not same: ${(rows, cols)} and ${(otherMat.rows, otherMat.cols)}")
     }
-    val N = rows * cols / 4 // スレッド1つあたりの要素数。動かしてみて決める必要あり
+    val N = rows * cols / 6 // スレッド1つあたりの要素数。動かしてみて決める必要あり
     val r = rows * cols % N
     val nDiv = if (r!=0) rows * cols / N + 1 else rows * cols / N
     val arrFuture = Array.ofDim[Future[Array[U]]](nDiv)
@@ -138,7 +138,7 @@ class ValueMtrx2[T: ClassTag](override val rows: Int, override val cols: Int, ov
   }
 
   def mapNumeric[U >: T: ClassTag, S: ClassTag](f: U => S)(implicit num: Numeric[S]): ValueMtrx2[S] = {
-    val N = rows * cols / 4 // スレッド1つあたりの要素数。動かしてみて決める必要あり
+    val N = rows * cols / 6 // スレッド1つあたりの要素数。動かしてみて決める必要あり
     val r = rows * cols % N
     val nDiv = if (r!=0) rows * cols / N + 1 else rows * cols / N
     val arrFuture = Array.ofDim[Future[Array[S]]](nDiv)
