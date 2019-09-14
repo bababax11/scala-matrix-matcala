@@ -1,1 +1,15 @@
+[0m[[0m[0mdebug[0m] [0m[0mThe bababax11.matcala.matrix.ValueMtrx2 has the following regular definitions changed:[0m
+[0m[[0m[0mdebug[0m] [0m[0m	UsedName(finalize,[Default]), UsedName(notifyAll,[Default]).[0m
+[0m[[0m[0mdebug[0m] [0m[0mAll member reference dependencies will be considered within this context.[0m
+[0m[[0m[0mdebug[0m] [0m[0mFiles invalidated by inheriting from (external) bababax11.matcala.matrix.ValueMtrx2: Set(); now invalidating by inheritance (internally).[0m
+[0m[[0m[0mdebug[0m] [0m[0mGetting direct dependencies of all classes transitively invalidated by inheritance.[0m
+[0m[[0m[0mdebug[0m] [0m[0mGetting classes that directly depend on (external) bababax11.matcala.matrix.ValueMtrx2.[0m
+[0m[[0m[0mdebug[0m] [0m[0mNone of the modified names appears in source file of bababax11.matcala.matrix.Mtrx2Test. This dependency is not being considered for invalidation.[0m
+[0m[[0m[0mdebug[0m] [0m[0mThe bababax11.matcala.matrix.Mtrx2 has the following regular definitions changed:[0m
+[0m[[0m[0mdebug[0m] [0m[0m	UsedName(finalize,[Default]), UsedName(notifyAll,[Default]).[0m
+[0m[[0m[0mdebug[0m] [0m[0mAll member reference dependencies will be considered within this context.[0m
+[0m[[0m[0mdebug[0m] [0m[0mFiles invalidated by inheriting from (external) bababax11.matcala.matrix.Mtrx2: Set(); now invalidating by inheritance (internally).[0m
+[0m[[0m[0mdebug[0m] [0m[0mGetting direct dependencies of all classes transitively invalidated by inheritance.[0m
+[0m[[0m[0mdebug[0m] [0m[0mGetting classes that directly depend on (external) bababax11.matcala.matrix.Mtrx2.[0m
+[0m[[0m[0mdebug[0m] [0m[0mNone of the modified names appears in source file of bababax11.matcala.matrix.Mtrx2Test. This dependency is not being considered for invalidation.[0m
 [0m[[0m[0mdebug[0m] [0m[0mNo changes[0m
