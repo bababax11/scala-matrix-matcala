@@ -52,6 +52,13 @@ class Mtrx2Test extends FlatSpec with DiagrammedAssertions{
             new Mtrx2(2, Array(0,0,0,0,0,6)))
   }
 
+  val mat100 = new Mtrx2(2, (1 to 100).toArray)
+
+  "calcEach" should "be mapping2" in {
+    assert(mat100.calcEach(mat100)(_ + _) ==
+      new Mtrx2(2, (2 to 200 by 2).toArray))
+  }
+
   val vMat = new ValueMtrx2(2,
     Array(1,2,3,
           4,5,6))

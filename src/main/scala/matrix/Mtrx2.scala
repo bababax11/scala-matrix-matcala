@@ -54,8 +54,8 @@ class Mtrx2[T](val rows: Int, val cols: Int, val data: Array[T]) {
     val arrFuture = Array.ofDim[Future[Array[S]]](nDiv)
     for (l <- 0 until nDiv) {
       arrFuture(l) = Future {
-        val ar = Array.ofDim[S](if (l != nDiv-1 || r==0) N else r) // スコープは内部
-        for(k <- N*l until min(N*(l+1), rows*cols)) { println("Y");
+        val ar = Array.ofDim[S](if (l != nDiv-1 || r==0) N else r)
+        for(k <- N*l until min(N*(l+1), rows*cols)) {
           ar(k-N*l) = f(data(k), otherMat.data(k))
         }
         ar
@@ -63,13 +63,9 @@ class Mtrx2[T](val rows: Int, val cols: Int, val data: Array[T]) {
     }
     var array = Array.ofDim[S](0)
     for (l <- 0 until nDiv) {
-      arrFuture(l) onComplete {
-        case Success(ar) => {println("a"); array = Array.concat(array, ar) }
-        case Failure(exception) => throw exception
-      }
+      val result = Await.result(arrFuture(l), Duration.Inf) // スコープは内部
+      array = Array.concat(array, result)
     }
-    Await.result(arrFuture(nDiv-1), Duration.Inf)
-    println("b")
     new Mtrx2[S](rows, cols, array)
   }
 
