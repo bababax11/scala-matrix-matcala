@@ -48,7 +48,7 @@ class Mtrx2[T](val rows: Int, val cols: Int, val data: Array[T]) {
     if (rows != otherMat.rows || cols != otherMat.cols || rows * cols <= 0) {
       throw new IndexOutOfBoundsException(s"Shape is not same: ${(rows, cols)} and ${(otherMat.rows, otherMat.cols)}")
     }
-    val N = 50 // スレッド1つあたりの要素数。動かしてみて決める必要あり
+    val N = rows * cols / 4 // スレッド1つあたりの要素数。動かしてみて決める必要あり
     val r = rows * cols % N
     val nDiv = if (r!=0) rows * cols / N + 1 else rows * cols / N
     val arrFuture = Array.ofDim[Future[Array[S]]](nDiv)
@@ -69,12 +69,37 @@ class Mtrx2[T](val rows: Int, val cols: Int, val data: Array[T]) {
     new Mtrx2[S](rows, cols, array)
   }
 
-  def map[S: ClassTag, U >: T](f: U => S): Mtrx2[S] = {
-    val arr = Array.ofDim[S](cols*rows)
-    for (k <- 0 until rows*cols) {
-      arr(k) = f(data(k))
+  def calcEachOneThread[S : ClassTag, U >: T](otherMat: Mtrx2[U])(f: (U, U) => S): Mtrx2[S] = {
+    if (rows != otherMat.rows || cols != otherMat.cols || rows * cols <= 0) {
+      throw new IndexOutOfBoundsException(s"Shape is not same: ${(rows, cols)} and ${(otherMat.rows, otherMat.cols)}")
     }
+    val arr = Array.ofDim[S](rows*cols)
+    for (k <- 0 until rows*cols)
+      arr(k) = f(data(k), otherMat.data(k))
     new Mtrx2[S](rows, cols, arr)
+  }
+
+
+  def map[S: ClassTag, U >: T](f: U => S): Mtrx2[S] = {
+    val N = rows * cols / 4 // スレッド1つあたりの要素数。動かしてみて決める必要あり
+    val r = rows * cols % N
+    val nDiv = if (r!=0) rows * cols / N + 1 else rows * cols / N
+    val arrFuture = Array.ofDim[Future[Array[S]]](nDiv)
+    for (l <- 0 until nDiv) {
+      arrFuture(l) = Future {
+        val ar = Array.ofDim[S](if (l != nDiv-1 || r==0) N else r)
+        for(k <- N*l until min(N*(l+1), rows*cols)) {
+          ar(k-N*l) = f(data(k))
+        }
+        ar
+      }
+    }
+    var array = Array.ofDim[S](0)
+    for (l <- 0 until nDiv) {
+      val result = Await.result(arrFuture(l), Duration.Inf) // スコープは内部
+      array = Array.concat(array, result)
+    }
+    new Mtrx2[S](rows, cols, array)
   }
 }
 
@@ -91,33 +116,47 @@ class ValueMtrx2[T: ClassTag](override val rows: Int, override val cols: Int, ov
     if (rows != otherMat.rows || cols != otherMat.cols) {
       throw new IndexOutOfBoundsException(s"Shape is not same: ${(rows, cols)} and ${(otherMat.rows, otherMat.cols)}")
     }
-    val N = 1000
-    val nDiv = rows * cols / N
+    val N = rows * cols / 4 // スレッド1つあたりの要素数。動かしてみて決める必要あり
+    val r = rows * cols % N
+    val nDiv = if (r!=0) rows * cols / N + 1 else rows * cols / N
     val arrFuture = Array.ofDim[Future[Array[U]]](nDiv)
     for (l <- 0 until nDiv) {
       arrFuture(l) = Future {
-        val ar: Array[U] = Array.ofDim[U](N) // スコープは内部
-        for(k <- N*l until N*(l+1))
-          ar(k) = f(data(k), otherMat.data(k))
+        val ar = Array.ofDim[U](if (l != nDiv-1 || r==0) N else r)
+        for(k <- N*l until min(N*(l+1), rows*cols)) {
+          ar(k-N*l) = f(data(k), otherMat.data(k))
+        }
         ar
       }
     }
-    val array = Array.ofDim[U](rows*cols)
+    var array = Array.ofDim[U](0)
     for (l <- 0 until nDiv) {
-      arrFuture(l) onComplete {
-        case Success(ar) => Array.concat(array, ar)
-        case Failure(exception) => throw exception
-      }
+      val result = Await.result(arrFuture(l), Duration.Inf) // スコープは内部
+      array = Array.concat(array, result)
     }
     new ValueMtrx2[U](rows, cols, array)
   }
 
   def mapNumeric[U >: T: ClassTag, S: ClassTag](f: U => S)(implicit num: Numeric[S]): ValueMtrx2[S] = {
-    val arr = Array.ofDim[S](cols*rows)
-    for (k <- 0 until rows*cols) {
-      arr(k) = f(data(k))
+    val N = rows * cols / 4 // スレッド1つあたりの要素数。動かしてみて決める必要あり
+    val r = rows * cols % N
+    val nDiv = if (r!=0) rows * cols / N + 1 else rows * cols / N
+    val arrFuture = Array.ofDim[Future[Array[S]]](nDiv)
+    for (l <- 0 until nDiv) {
+      arrFuture(l) = Future {
+        val ar = Array.ofDim[S](if (l != nDiv-1 || r==0) N else r)
+        for(k <- N*l until min(N*(l+1), rows*cols)) {
+          ar(k-N*l) = f(data(k))
+        }
+        ar
+      }
     }
-    new ValueMtrx2[S](rows, cols, arr)
+    var array = Array.ofDim[S](0)
+    for (l <- 0 until nDiv) {
+      val result = Await.result(arrFuture(l), Duration.Inf) // スコープは内部
+      array = Array.concat(array, result)
+    }
+    new ValueMtrx2[S](rows, cols, array)
   }
 
   def +[U >: T: ClassTag](otherMat: ValueMtrx2[U])(implicit num: Numeric[U]): ValueMtrx2[U] =
