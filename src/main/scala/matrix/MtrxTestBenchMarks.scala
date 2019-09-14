@@ -27,7 +27,7 @@ object MtrxTestBenchMarks extends App {
   val mat0 = new Mtrx2(5, (1 to 10000).toArray)
   val mat02 = new Mtrx2(5, (1 to 20000 by 2).toArray)
 
-  println("10000要素の行列: アダマール積で並行処理するには多分小さすぎる")
+  println("10000要素の行列: 要素ごとの計算で並行処理するには多分小さすぎる")
   println("並行")
   printExecTime {
     mat0.calcEach(mat02)(_ + _)

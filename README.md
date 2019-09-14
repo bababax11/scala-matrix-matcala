@@ -10,7 +10,7 @@ Scalaで行列計算を実装しました。
 
 ## これからやりたいこと(他にやりたいことが多いので、たぶんしばらくやらない)
 
-- コメントアウトをして`test` すると、なぞエラー
+- コメントアウトをしないで`test` すると、なぞエラー
 
     ```aidl
     Unexpected New(TypeTree(class ValueMtrx2)/bababax11.matcala.matrix.ValueMtrx2) reached GenBCode.

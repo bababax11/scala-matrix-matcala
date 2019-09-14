@@ -65,6 +65,7 @@ class Mtrx2Test extends FlatSpec with DiagrammedAssertions{
 
   val vMat2 = new ValueMtrx2(2, Array(1,2,3,4,4,0))
 
+  // 以下謎エラー発生ゾーン
 //  "calculation" should "be done properly" in {
 //
 //    assert(vMat + vMat2 == new ValueMtrx2(2, Array(2,4,6,8,9,6)))
